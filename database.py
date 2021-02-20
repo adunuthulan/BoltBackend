@@ -1,17 +1,15 @@
 #set this in the shell session or the server
-#export GOOGLE_APPLICATION_CREDENTIALS="/home/niravadunuthula/Downloads/bolt-hacksc-firebase-adminsdk-rwia8-34ac113da0.json"
+#export GOOGLE_APPLICATION_CREDENTIALS="/Users/niravadunuthula/Downloads/bolt-hacksc-firebase-adminsdk-rwia8-34ac113da0.json"
 import firebase_admin
 from firebase_admin import firestore
 
 import threading
 import datetime
 
-from Matching import matchAPI
+from matching import matchAPI
 
 default_app = firebase_admin.initialize_app()
 client = firestore.client()
-
-snapshot = client.collection('users').document('alice').get()
 
 def makeMatch(uuid1, uuid2, dist):
     #Create a Match Event for with the two specified users and update the currentMatch for each user
@@ -35,8 +33,7 @@ def makeMatch(uuid1, uuid2, dist):
             u'uuid': uuid2,
             u'distanceRun': 0,
             u'completionTime': 0
-        },
-        u'winner': None
+        }
     })
     
     user1_ref = client.collection('users').document(uuid1)
@@ -52,6 +49,8 @@ def makeMatch(uuid1, uuid2, dist):
 def listen_available():
     # Create an Event for notifying main thread.
     callback_done = threading.Event()
+
+    doc_ref = client.collection(u'matchwaiting').document(u'matchwaiting')
     
     # Create a callback on_snapshot function to capture changes
     def on_snapshot(doc_snapshot, changes, read_time):
@@ -59,7 +58,7 @@ def listen_available():
             print(f'Received document snapshot: {doc.id}')
 
             #get the users in the avaliable list
-            available_users = doc.to_dict()['matches']
+            available_users = doc.to_dict()[u'users']
 
             #remove the users uuids from the available list and make a matchEvent with both users
             if len(available_users) > 1:
@@ -68,14 +67,11 @@ def listen_available():
                     available_users.remove(uuid1)
                     available_users.remove(uuid2)
                     makeMatch(uuid1, uuid2, dist)
-
-                doc.update({
-                    u'uuid': available_users
+                doc_ref.set({
+                    u'users': available_users
                 })
 
         callback_done.set()
-
-    doc_ref = client.collection(u'matchwaiting').document(u'matchwaiting')
 
     # Watch the document
     doc_watch = doc_ref.on_snapshot(on_snapshot)
@@ -87,4 +83,5 @@ def listen_available():
     doc_watch.unsubscribe()
 
 def listen_terminate():
+    
     return
