@@ -14,16 +14,17 @@ client = firestore.client()
 def makeMatch(uuid1, uuid2, dist):
     #Create a Match Event for with the two specified users and update the currentMatch for each user
     activity_ref = client.collection('matchActivities').document()
+    time_ref = client.collection('time').document('time')
 
     #get the date in format YYYY-MM-DD HH:MM:SS
-    d = datetime.datetime.now()
-    mindelay = 60 #The matchmaker will send a start time at least 60 seconds after the match is created, aligning with the nearest minute
+    time_ref.set({'time':firestore.SERVER_TIMESTAMP})
+
+    d = time_ref.get().to_dict()['time']
+    mindelay = 10 #The matchmaker will send a start time at least 60 seconds after the match is created, aligning with the nearest minute
     delayed = d.second+mindelay
-    startTimestamp = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute + 1 + delayed//60)
+    startTimestamp = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute + 1 + delayed//60, delayed%60)
 
     activity_ref.set({
-        u'startTimestamp': startTimestamp, #format YYYY-MM-DD HH:MM:SS
-        u'distance': dist, #miles
         u'athlete1': {
             u'uuid': uuid1,
             u'distanceRun': 0,
@@ -33,17 +34,20 @@ def makeMatch(uuid1, uuid2, dist):
             u'uuid': uuid2,
             u'distanceRun': 0,
             u'completionTime': 0
-        }
+        },
+        u'distance': dist, #miles
+        u'startTimestamp': startTimestamp, #startTimestamp #format YYYY-MM-DD HH:MM:SS
+        u'aid': activity_ref.id
     })
-    
+
     user1_ref = client.collection('users').document(uuid1)
     user2_ref = client.collection('users').document(uuid2)
 
     user1_ref.update({
-        u'currentMatch': activity_ref
+        u'currentMatch': activity_ref.id
     })
     user2_ref.update({
-        u'currentMatch': activity_ref
+        u'currentMatch': activity_ref.id
     })
 
 def listen_available():
@@ -64,8 +68,10 @@ def listen_available():
             if len(available_users) > 1:
                 matches = matchAPI(available_users)
                 for (uuid1, uuid2, dist) in matches:
+                    print(matches, ":", uuid1)
                     available_users.remove(uuid1)
                     available_users.remove(uuid2)
+                    print(available_users)
                     makeMatch(uuid1, uuid2, dist)
                 doc_ref.set({
                     u'users': available_users
