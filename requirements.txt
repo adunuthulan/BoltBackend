@@ -3,3 +3,4 @@ Lxml
 Flask
 Flask-RESTful
 uwsgi
+firebase_admin

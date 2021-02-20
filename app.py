@@ -1,24 +1,32 @@
-#app.py#Import necessary packages
+#app.py
+
+#Import necessary packages
 from flask import Flask
 from flask_restful import Resource, reqparse, Api #Instantiate a flask object 
+import threading
 app = Flask(__name__)
+
 #Instantiate Api object
 api = Api(app)
 
-#import API from RMPClass
-from RMPClass import RateMyProfAPI
 
-class RMP(Resource):
+
+class Match(Resource):
     def get(self, name):    
-        rmp = RateMyProfAPI(teacher = name)  
-        rmp.retrieve_rmp_info()
-        if rmp.get_rmp_info() == "Info currently not available":            
-            return -1
-        return float(rmp.get_rmp_info().split('/')[0])
+        matchAPI = matchAPI()  
+        match = matchAPI.getMatch(name)
 
-api.add_resource(RMP, '/<string:name>')
+        return match
+
+class Activity(Resource):
+    def get(self, ):
+        return
+
+
+api.add_resource(Match, '/match')
 
 if __name__=='__main__':        
     #Run the applications
     app.run() 
+
     
