@@ -21,7 +21,7 @@ ENV_KEYS = {
 }
 
 
-credentials - credentials.Certificate(ENV_KEYS)
+credentials = credentials.Certificate(ENV_KEYS)
 
 default_app = firebase_admin.initialize_app(credentials, {'databaseURL': environ["FIREBASE_DATABASE_URL"]})
 client = firestore.client()

@@ -1,7 +1,7 @@
 import math
 
 def matchAPI(available):
-    tmp = [(a, 1) for a in available] #change to incorporate distance
+    tmp = [(a, 1609) for a in available] #change to incorporate distance
     matches = list()
     visited = set()
 
