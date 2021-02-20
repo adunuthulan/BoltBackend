@@ -13,12 +13,13 @@ from matching import matchAPI
 ENV_KEYS = {
     "type": "service_account",
     "private_key_id": environ["FIREBASE_PRIVATE_KEY_ID"],
-    "private_key": environ["FIREBASE_PRIVATE_KEY"],
+    "private_key": environ["FIREBASE_PRIVATE_KEY"].replace("\\n", "\n"),
     "client_email": environ["FIREBASE_CLIENT_EMAIL"],
     "client_id": environ["FIREBASE_CLIENT_ID"],
     "token_uri": environ["FIREBASE_TOKEN_URI"],
     "project_id": environ["FIREBASE_PROJECT_ID"],
 }
+
 
 credentials - credentials.Certificate(ENV_KEYS)
 
