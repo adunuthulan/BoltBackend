@@ -85,3 +85,6 @@ def listen_available():
 
     # Terminate watch on a document
     doc_watch.unsubscribe()
+
+def listen_terminate():
+    return
