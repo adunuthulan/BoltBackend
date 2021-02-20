@@ -1,14 +1,28 @@
 #set this in the shell session or the server
 #export GOOGLE_APPLICATION_CREDENTIALS="/Users/niravadunuthula/Downloads/bolt-hacksc-firebase-adminsdk-rwia8-34ac113da0.json"
 import firebase_admin
-from firebase_admin import firestore
+from firebase_admin import firestore, credentials
+
+from os import environ
 
 import threading
 import datetime
 
 from matching import matchAPI
 
-default_app = firebase_admin.initialize_app()
+ENV_KEYS = {
+    "type": "service_account",
+    "private_key_id": environ["FIREBASE_PRIVATE_KEY_ID"],
+    "private_key": environ["FIREBASE_PRIVATE_KEY"],
+    "client_email": environ["FIREBASE_CLIENT_EMAIL"],
+    "client_id": environ["FIREBASE_CLIENT_ID"],
+    "token_uri": environ["FIREBASE_TOKEN_URI"],
+    "project_id": environ["FIREBASE_PROJECT_ID"],
+}
+
+credentials - credentials.Certificate(ENV_KEYS)
+
+default_app = firebase_admin.initialize_app(credentials, {'databaseURL': environ["FIREBASE_DATABASE_URL"]})
 client = firestore.client()
 
 def makeMatch(uuid1, uuid2, dist):
