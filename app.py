@@ -15,10 +15,6 @@ class Match(Resource):
         listen_available()
         return
 
-class Activity(Resource):
-    def get(self, name):
-        return
-
 api.add_resource(Match, '/match')
 
 if __name__=='__main__':        
