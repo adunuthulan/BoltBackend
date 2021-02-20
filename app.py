@@ -17,7 +17,9 @@ class Match(Resource):
 
 api.add_resource(Match, '/match')
 
+from app import app as application 
+
 if __name__=='__main__':        
     #Run the applications
-    app.run() 
+    application.run() 
     
