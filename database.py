@@ -35,9 +35,10 @@ def makeMatch(uuid1, uuid2, dist):
     time_ref.set({'time':firestore.SERVER_TIMESTAMP})
 
     d = time_ref.get().to_dict()['time']
-    mindelay = 10 #The matchmaker will send a start time at least 60 seconds after the match is created, aligning with the nearest minute
+    mindelay = 30 #The matchmaker will send a start time at least 60 seconds after the match is created, aligning with the nearest minute
     delayed = d.second+mindelay
-    startTimestamp = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute + 1 + delayed//60, delayed%60)
+    #startTimestamp = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute + 1 + delayed//60, delayed%60)
+    demoTimestamp = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute + delayed//60, delayed%60)
 
     activity_ref.set({
         u'athlete1': {
