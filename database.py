@@ -52,7 +52,7 @@ def makeMatch(uuid1, uuid2, dist):
             u'completionTime': 0
         },
         u'distance': dist, #miles
-        u'startTimestamp': startTimestamp, #startTimestamp #format YYYY-MM-DD HH:MM:SS
+        u'startTimestamp': demoTimestamp, #startTimestamp #format YYYY-MM-DD HH:MM:SS
         u'aid': activity_ref.id
     })
 
