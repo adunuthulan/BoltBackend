@@ -23,7 +23,7 @@ ENV_KEYS = {
 
 credentials = credentials.Certificate(ENV_KEYS)
 
-default_app = firebase_admin.initialize_app(credentials, {'databaseURL': environ["FIREBASE_DATABASE_URL"]})
+default_app = firebase_admin.initialize_app(credentials)
 client = firestore.client()
 
 def makeMatch(uuid1, uuid2, dist):
