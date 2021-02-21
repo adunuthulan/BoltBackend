@@ -10,21 +10,21 @@ import datetime
 
 from matching import matchAPI
 
-# ENV_KEYS = {
-#     "type": "service_account",
-#     "private_key_id": environ["FIREBASE_PRIVATE_KEY_ID"],
-#     "private_key": environ["FIREBASE_PRIVATE_KEY"].replace("\\n", "\n"),
-#     "client_email": environ["FIREBASE_CLIENT_EMAIL"],
-#     "client_id": environ["FIREBASE_CLIENT_ID"],
-#     "token_uri": environ["FIREBASE_TOKEN_URI"],
-#     "project_id": environ["FIREBASE_PROJECT_ID"],
-# }
+ENV_KEYS = {
+    "type": "service_account",
+    "private_key_id": environ["FIREBASE_PRIVATE_KEY_ID"],
+    "private_key": environ["FIREBASE_PRIVATE_KEY"].replace("\\n", "\n"),
+    "client_email": environ["FIREBASE_CLIENT_EMAIL"],
+    "client_id": environ["FIREBASE_CLIENT_ID"],
+    "token_uri": environ["FIREBASE_TOKEN_URI"],
+    "project_id": environ["FIREBASE_PROJECT_ID"],
+}
 
 
-# credentials = credentials.Certificate(ENV_KEYS)
+credentials = credentials.Certificate(ENV_KEYS)
 
-# default_app = firebase_admin.initialize_app(credentials)
-default_app = firebase_admin.initialize_app()
+default_app = firebase_admin.initialize_app(credentials)
+# default_app = firebase_admin.initialize_app()
 client = firestore.client()
 
 def makeMatch(uuid1, uuid2, dist):
